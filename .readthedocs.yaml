@@ -1,5 +1,6 @@
+```yaml
 # Read the Docs configuration file
-# used for generating https://djitellopy.readthedocs.io/en/latest/
+# Configuration for building the Drone Swarm documentation.
 
 version: 2
 
@@ -15,3 +16,4 @@ python:
 mkdocs:
   configuration: mkdocs.yml
   fail_on_warning: false
+```

@@ -1,5 +1,7 @@
+```markdown
 # Tello
 
-::: djitellopy.Tello
+::: drone_swarm.Tello
     :docstring:
     :members:
+```

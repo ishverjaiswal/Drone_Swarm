@@ -1,5 +1,7 @@
+```markdown
 # Swarm
 
-::: djitellopy.TelloSwarm
+::: drone_swarm.TelloSwarm
     :docstring:
     :members:
+```

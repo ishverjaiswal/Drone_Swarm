@@ -1,28 +1,50 @@
-# DJITelloPy
+````markdown
+# Drone Swarm
 
-This documentation is the API reference of the DJITelloPy Library.
+This documentation provides the API reference for the **Drone Swarm** Python package.
 
-For more information on the project please see the [readme on github](https://github.com/damiafuentes/DJITelloPy/blob/master/README.md).
+For project information, source code, installation instructions, and usage examples, visit the GitHub repository:
+
+https://github.com/ishverjaiswal/Drone_Swarm
 
 ## API
 
-Currently the library contains the following classes:
+The package currently provides the following primary classes:
 
-- [Tello][tello] for controlling a single tello drone.
-- [Swarm][swarm] for controlling multiple Tello EDUs in parallel.
+- **Tello** – Controls a single DJI Tello or Tello EDU drone.
+- **TelloSwarm** – Coordinates and manages multiple DJI Tello drones simultaneously.
 
-## Example Code
+## Examples
 
-Please see the [example directory](https://github.com/damiafuentes/DJITelloPy/tree/master/examples) on github.
+Example programs are available in the `examples/` directory and demonstrate:
+
+- Basic drone control
+- Swarm coordination
+- Live video streaming
+- Image capture
+- Keyboard-based control
+- Mission pad detection
 
 ## Installation
 
+Clone the repository:
+
 ```bash
-pip install djitellopy
+git clone https://github.com/ishverjaiswal/Drone_Swarm.git
+cd Drone_Swarm
+````
+
+Install the package:
+
+```bash
+pip install -e .
 ```
 
-For Linux distributions with both python2 and python3 (e.g. Debian, Ubuntu, ...) you need to run
+If the package is published to PyPI in the future, it can be installed using:
 
 ```bash
-pip3 install djitellopy
+pip install drone_swarm
+```
+
+```
 ```
