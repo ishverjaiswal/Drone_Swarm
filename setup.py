@@ -3,40 +3,21 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fd:
     long_description = fd.read()
 
-# replace relative urls to example files with absolute urls to the main git repo
-repo_code_url = "https://github.com/damiafuentes/DJITelloPy/tree/master"
-long_description = long_description.replace("](examples/", "]({}/examples/".format(repo_code_url))
-
 setuptools.setup(
-    name='djitellopy',
-    packages=['djitellopy'],
-    version='2.5.0',
-    license='MIT',
-    description='Tello drone library including support for video streaming, swarms, state packets and more',
+    name="drone_swarm",
+    version="1.0.0",
+    packages=setuptools.find_packages(),
+    description="Python package for drone swarm coordination and control",
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    author='Jakob Löw',
-    author_email='djitellopy@m4gnus.de',
-    url='https://github.com/damiafuentes/DJITelloPy',
-    download_url='https://github.com/damiafuentes/DJITelloPy/archive/2.5.0.tar.gz',
-    keywords=['tello', 'dji', 'drone', 'sdk', 'official sdk'],
+    long_description_content_type="text/markdown",
+    author="Ishver Chandra Jaiswal",
+    author_email="ishverjaiswal40@gmail.com",
+    url="https://github.com/ishverjaiswal/Drone_Swarm",
     install_requires=[
-        'numpy',
-        'opencv-python',
-        'av',
-        'pillow'
+        "numpy",
+        "opencv-python",
+        "av",
+        "pillow"
     ],
-    python_requires='>=3.6',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-    ],
+    python_requires=">=3.6",
 )

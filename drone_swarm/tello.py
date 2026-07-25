@@ -69,7 +69,7 @@ class Tello:
     FORMATTER = logging.Formatter('[%(levelname)s] %(filename)s - %(lineno)d - %(message)s')
     HANDLER.setFormatter(FORMATTER)
 
-    LOGGER = logging.getLogger('djitellopy')
+    LOGGER = logging.getLogger("drone_swarm")
     LOGGER.addHandler(HANDLER)
     LOGGER.setLevel(logging.INFO)
     # Use Tello.LOGGER.setLevel(logging.<LEVEL>) in YOUR CODE
@@ -1063,7 +1063,8 @@ class BackgroundFrameRead:
 
         # Try grabbing frame with PyAV
         # According to issue #90 the decoder might need some time
-        # https://github.com/damiafuentes/DJITelloPy/issues/90#issuecomment-855458905
+        # Small delay to improve communication stability with the drone.
+        time.sleep(0.1)
         try:
             Tello.LOGGER.debug('trying to grab video frames...')
             self.container = av.open(self.address, timeout=(Tello.FRAME_GRAB_TIMEOUT, None))

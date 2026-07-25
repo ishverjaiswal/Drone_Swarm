@@ -1,7 +1,7 @@
 #Module with individual panorama types defined. You can just import it and use hovever you like
 #
 #It will save photos from Tello inside folder that's in. You can change this by changing path inside every function.
-from djitellopy import Tello
+from drone_swarm import Tello
 import cv2
 import time
 

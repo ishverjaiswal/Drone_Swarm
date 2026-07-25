@@ -1,37 +1,36 @@
-# DJITelloPy
+# Drone Swarm
 
-DJITelloPy is a Python interface for DJI Tello drones built on the official Tello SDK and Tello EDU SDK. It provides a simple way to communicate with and control Tello drones using Python.
+Drone Swarm is a Python package for controlling and coordinating DJI Tello and Tello EDU drones using the official Tello SDK. It provides a clean Python API for drone communication, flight control, telemetry monitoring, live video streaming, and swarm management.
 
 ## Features
 
-- Support for all DJI Tello SDK commands
-- Live video streaming
-- Real-time drone state and telemetry
-- Multi-drone (swarm) control
-- Compatible with Python 3.6 and above
+* Full support for DJI Tello SDK commands
+* Real-time flight control
+* Live video streaming
+* Drone telemetry and status monitoring
+* Multi-drone swarm coordination
+* Simple and extensible Python API
+* Compatible with Python 3.6 and above
 
 ## Installation
 
-Install using pip:
+Clone the repository:
 
 ```bash
-pip install djitellopy
+git clone https://github.com/ishverjaiswal/Drone_Swarm.git
+cd Drone_Swarm
 ```
 
-On Linux systems with both Python 2 and Python 3 installed, use:
+Install the package in editable mode:
 
 ```bash
-pip3 install djitellopy
-```
-
-## Developer Installation
-
-Clone the repository and install it in editable mode:
-
-```bash
-git clone https://github.com/damiafuentes/DJITelloPy.git
-cd DJITelloPy
 pip install -e .
+```
+
+Or, if the package is published on PyPI in the future:
+
+```bash
+pip install drone_swarm
 ```
 
 ## Usage
@@ -39,36 +38,78 @@ pip install -e .
 ### Basic Example
 
 ```python
-from djitellopy import Tello
+from drone_swarm import Tello
 
-tello = Tello()
+drone = Tello()
 
-tello.connect()
-tello.takeoff()
+drone.connect()
 
-tello.move_left(100)
-tello.rotate_counter_clockwise(90)
-tello.move_forward(100)
+print("Battery:", drone.get_battery())
 
-tello.land()
+drone.takeoff()
+
+drone.move_left(100)
+drone.rotate_counter_clockwise(90)
+drone.move_forward(100)
+
+drone.land()
+```
+
+## Swarm Example
+
+```python
+from drone_swarm import TelloSwarm
+
+swarm = TelloSwarm.fromIps([
+    "192.168.10.1",
+    "192.168.10.2"
+])
+
+swarm.connect()
+
+swarm.takeoff()
+
+swarm.parallel(lambda index, drone: drone.move_up(50))
+
+swarm.land()
 ```
 
 ## Example Programs
 
-The project includes several example scripts:
+The repository includes example programs for:
 
-- Capture photos
-- Record videos
-- Control multiple drones simultaneously
-- Keyboard-based manual control
-- Mission pad detection
-- Pygame-based manual control
+* Basic drone control
+* Image capture
+* Video streaming
+* Multi-drone swarm control
+* Keyboard-based manual control
+* Mission pad detection
+* Autonomous flight operations
+
+## Requirements
+
+* Python 3.6+
+* DJI Tello or Tello EDU
+* Wi-Fi connection to the drone
+
+Install project dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Repository
+
+GitHub:
+
+```text
+https://github.com/ishverjaiswal/Drone_Swarm
+```
 
 ## Notes
 
-- If the `streamon` command returns `Unknown command`, update the drone firmware using the DJI Tello app.
-- Mission pad detection is supported only on Tello EDU.
-- A bright environment is recommended for reliable mission pad detection.
-- Connecting to an existing Wi-Fi network is supported only on Tello EDU.
-- Video streaming is unavailable when connected through an external Wi-Fi network.
-
+* Ensure the drone firmware is up to date before use.
+* Mission pad functionality is available only on Tello EDU.
+* Use the drone in a well-lit environment for reliable mission pad detection.
+* Live video streaming requires a stable Wi-Fi connection.
+* Refer to the `examples/` directory for additional usage demonstrations.

@@ -1,4 +1,4 @@
-from djitellopy import TelloSwarm
+from drone_swarm import TelloSwarm
 
 swarm = TelloSwarm.fromIps([
     "192.168.178.42",

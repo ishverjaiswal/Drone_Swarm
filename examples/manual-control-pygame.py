@@ -1,4 +1,4 @@
-from djitellopy import Tello
+from drone_swarm import Tello
 import cv2
 import pygame
 import numpy as np

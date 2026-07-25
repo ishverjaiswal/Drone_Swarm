@@ -1,6 +1,6 @@
 import time, cv2
 from threading import Thread
-from djitellopy import Tello
+from drone_swarm import Tello
 
 tello = Tello()
 

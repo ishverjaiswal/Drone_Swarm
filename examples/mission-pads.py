@@ -1,4 +1,4 @@
-from djitellopy import Tello
+from drone_swarm import Tello
 
 # create and connect
 # 创建Tello对象并连接
