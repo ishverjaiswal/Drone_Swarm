@@ -1,37 +1,92 @@
-import time, cv2
+"""Example demonstrating background multithreaded video recording during flight operations.
+
+Flight Sequence:
+    1. Connect to Tello and start the camera stream.
+    2. Spawn a background daemon thread to capture frames to 'video.avi'.
+    3. Take off, climb 100cm, execute a 360° counter-clockwise rotation, and land.
+    4. Safely stop video recording and release file resources.
+"""
+
+import time
+import cv2
 from threading import Thread
 from drone_swarm import Tello
 
-tello = Tello()
+# Global flag to signal the video recording thread
+keep_recording: bool = True
 
-tello.connect()
 
-keepRecording = True
-tello.streamon()
-frame_read = tello.get_frame_read()
+def video_recorder(tello: Tello) -> None:
+    """Background target function to continuously write camera frames to an AVI video file."""
+    global keep_recording
 
-def videoRecorder():
-    # create a VideoWrite object, recoring to ./video.avi
-    # 创建一个VideoWrite对象，存储画面至./video.avi
+    frame_read = tello.get_frame_read()
+
+    # Wait until a valid frame is received from the camera stream
+    while frame_read.frame is None:
+        time.sleep(0.1)
+
     height, width, _ = frame_read.frame.shape
-    video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    video = cv2.VideoWriter("video.avi", fourcc, 30, (width, height))
 
-    while keepRecording:
-        video.write(frame_read.frame)
-        time.sleep(1 / 30)
+    print("[RECORDING] Started background video recording to 'video.avi'...")
+    try:
+        while keep_recording:
+            frame = frame_read.frame
+            if frame is not None:
+                video.write(frame)
+            time.sleep(1 / 30)
+    finally:
+        print("[RECORDING] Releasing video writer...")
+        video.release()
 
-    video.release()
 
-# we need to run the recorder in a seperate thread, otherwise blocking options
-#  would prevent frames from getting added to the video
-# 我们需要在另一个线程中记录画面视频文件，否则其他的阻塞操作会阻止画面记录
-recorder = Thread(target=videoRecorder)
-recorder.start()
+def main() -> None:
+    global keep_recording
 
-tello.takeoff()
-tello.move_up(100)
-tello.rotate_counter_clockwise(360)
-tello.land()
+    # Initialize and connect Tello instance
+    tello: Tello = Tello()
+    tello.connect()
 
-keepRecording = False
-recorder.join()
+    battery: int = tello.get_battery()
+    print(f"[STATUS] Initial Battery Level: {battery}%")
+
+    if battery < 20:
+        print("[WARNING] Battery level too low to fly safely (< 20%).")
+        return
+
+    # Start video stream
+    tello.streamoff()
+    tello.streamon()
+
+    # Launch recorder in a dedicated thread to prevent blocking flight commands
+    recorder: Thread = Thread(target=video_recorder, args=(tello,))
+    recorder.start()
+
+    try:
+        print("[COMMAND] Taking off...")
+        tello.takeoff()
+
+        print("[COMMAND] Ascending 100cm...")
+        tello.move_up(100)
+
+        print("[COMMAND] Executing 360° counter-clockwise rotation...")
+        tello.rotate_counter_clockwise(360)
+
+    finally:
+        print("[SHUTDOWN] Landing drone and stopping recorder...")
+        tello.land()
+
+        # Signal thread termination and wait for thread exit
+        keep_recording = False
+        recorder.join()
+
+        # Clean up SDK resources
+        tello.streamoff()
+        tello.end()
+        print("[SHUTDOWN] Flight and recording complete.")
+
+
+if __name__ == "__main__":
+    main()

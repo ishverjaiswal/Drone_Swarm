@@ -1,82 +1,80 @@
-# Drone Swarm
+# 🚁 Drone Swarm
 
-Drone Swarm is a Python package for controlling and coordinating multiple DJI Tello drones using the official Tello SDK. It provides a simple and extensible API for drone communication, flight control, telemetry monitoring, video streaming, and swarm coordination.
+> A Python SDK and collection of examples for controlling DJI Ryze Tello drones individually or as a swarm.
 
-## Features
+# 🚁 Drone Swarm Ground Control Station (GCS)
 
-* Control DJI Tello and Tello EDU drones
-* Execute autonomous flight commands
-* Real-time telemetry monitoring
-* Live video streaming support
-* Multi-drone swarm management
-* High-level Python API
-* Compatible with Python 3.6 and above
+[![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.11.0-green?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
+[![Pygame](https://img.shields.io/badge/Pygame-2.6.1-red?style=for-the-badge&logo=python&logoColor=white)](https://www.pygame.org/)
+
+*An academic-grade, low-latency Python Ground Control Station and SDK designed for direct teleoperation, live video stream processing, mission pad navigation, and multi-agent UAV swarm orchestration.*
 
 ---
+
+## Overview
+
+Drone Swarm provides a Python interface for communicating with DJI Ryze Tello drones using the official UDP SDK.
+
+### Features
+- Manual keyboard control (Pygame)
+- OpenCV video streaming
+- Swarm control
+- Mission Pad support
+- Image capture
+- Video recording
 
 ## Project Structure
 
 ```text
 Drone_Swarm/
-│
 ├── drone_swarm/
-│   ├── __init__.py
-│   ├── tello.py
-│   ├── swarm.py
-│   └── enforce_types.py
-│
-├── docs/
 ├── examples/
-├── README.md
+├── setup.py
 ├── requirements.txt
-└── setup.py
+├── LICENSE
+└── README.md
 ```
-
----
 
 ## Installation
 
-Clone the repository:
-
 ```bash
-git clone https://github.com/ishverjaiswal/Drone_Swarm.git
+git clone https://github.com/your-username/Drone_Swarm.git
 cd Drone_Swarm
-```
-
-Install the package in editable mode:
-
-```bash
+pip install -r requirements.txt
 pip install -e .
 ```
-
-Or, if the package is published to PyPI in the future:
-
-```bash
-pip install drone_swarm
-```
-
----
 
 ## Quick Start
 
 ```python
 from drone_swarm import Tello
 
-drone = Tello()
-
-drone.connect()
-
-print("Battery:", drone.get_battery())
-
-drone.takeoff()
-
-drone.move_forward(100)
-drone.rotate_clockwise(90)
-
-drone.land()
+tello = Tello()
+tello.connect()
+print(tello.get_battery())
+tello.takeoff()
+tello.land()
+tello.end()
 ```
 
+## 🎮 Keyboard Controls
+
+| Key Binding | Flight Command |
+| :--- | :--- |
+| **T** | Takeoff |
+| **L** | Land |
+| **W / S** | Ascend / Descend |
+| **A / D** | Yaw Left / Right |
+| **Arrow Keys** | Pitch & Roll |
+| **ESC** | Graceful Exit |
+
 ---
+Run:
+
+```bash
+python examples/manual-control-pygame.py
+```
 
 ## Swarm Example
 
@@ -84,54 +82,24 @@ drone.land()
 from drone_swarm import TelloSwarm
 
 swarm = TelloSwarm.fromIps([
-    "192.168.10.1",
-    "192.168.10.2"
+    "192.168.1.101",
+    "192.168.1.102",
 ])
 
 swarm.connect()
-swarm.takeoff()
-
-swarm.parallel(lambda index, tello: tello.move_up(50))
-
-swarm.land()
+try:
+    swarm.takeoff()
+finally:
+    swarm.land()
+    swarm.end()
 ```
 
----
+## Roadmap
 
-## Capabilities
-
-* Drone connection management
-* Flight control
-* Telemetry monitoring
-* Battery status
-* Video streaming
-* Swarm coordination
-* Mission execution
-* Emergency stop support
-
----
-
-## Requirements
-
-* Python 3.6+
-* DJI Tello or Tello EDU
-* Wi-Fi connection to the drone
-
-Install the required dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Repository
-
-GitHub:
-
-```
-https://github.com/ishverjaiswal/Drone_Swarm
-```
-
+- [x] Manual Control
+- [x] Video Streaming
+- [x] Swarm Support
+- [x] Mission Pads
+- [ ] Formation Flight
 
 

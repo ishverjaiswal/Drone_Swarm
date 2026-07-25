@@ -1,53 +1,105 @@
-# simple example demonstrating how to control a Tello using your keyboard.
-# For a more fully featured example see manual-control-pygame.py
-# 
-# Use W, A, S, D for moving, E, Q for rotating and R, F for going up and down.
-# When starting the script the Tello will takeoff, pressing ESC makes it land
-#  and the script exit.
+"""Simple example demonstrating real-time keyboard control of a Tello drone using OpenCV.
 
-# 简单的演示如何用键盘控制Tello
-# 欲使用全手动控制请查看 manual-control-pygame.py
-#
-# W, A, S, D 移动， E, Q 转向，R、F上升与下降.
-# 开始运行程序时Tello会自动起飞，按ESC键降落
-# 并且程序会退出
+For a fully featured Pygame GUI example, see manual-control-pygame.py.
 
+Controls:
+    - W / S: Move Forward / Backward
+    - A / D: Move Left / Right
+    - R / F: Ascend / Descend
+    - E / Q: Yaw Rotate Clockwise / Counter-Clockwise
+    - ESC: Land drone and exit program
+"""
+
+import cv2
 from drone_swarm import Tello
-import cv2, math, time
 
-tello = Tello()
-tello.connect()
+# Base movement velocity bounded between 10 and 100
+SPEED: int = 50
 
-tello.streamon()
-frame_read = tello.get_frame_read()
 
-tello.takeoff()
+def main() -> None:
+    tello: Tello = Tello()
+    tello.connect()
 
-while True:
-    # In reality you want to display frames in a seperate thread. Otherwise
-    #  they will freeze while the drone moves.
-    # 在实际开发里请在另一个线程中显示摄像头画面，否则画面会在无人机移动时静止
-    img = frame_read.frame
-    cv2.imshow("drone", img)
+    battery: int = tello.get_battery()
+    print(f"[STATUS] Initial Battery Level: {battery}%")
 
-    key = cv2.waitKey(1) & 0xff
-    if key == 27: # ESC
-        break
-    elif key == ord('w'):
-        tello.move_forward(30)
-    elif key == ord('s'):
-        tello.move_back(30)
-    elif key == ord('a'):
-        tello.move_left(30)
-    elif key == ord('d'):
-        tello.move_right(30)
-    elif key == ord('e'):
-        tello.rotate_clockwise(30)
-    elif key == ord('q'):
-        tello.rotate_counter_clockwise(30)
-    elif key == ord('r'):
-        tello.move_up(30)
-    elif key == ord('f'):
-        tello.move_down(30)
+    if battery < 20:
+        print("[WARNING] Battery too low to fly safely (< 20%).")
+        return
 
-tello.land()
+    # Initialize video stream
+    tello.streamoff()
+    tello.streamon()
+    frame_read = tello.get_frame_read()
+
+    # Take off
+    print("[COMMAND] Taking off...")
+    tello.takeoff()
+
+    try:
+        while True:
+            # Retrieve current frame from thread
+            img = frame_read.frame
+
+            if img is None:
+                continue
+
+            # Overlay battery indicator on OpenCV window
+            cv2.putText(
+                img,
+                f"Battery: {tello.get_battery()}%",
+                (15, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 255, 0),
+                2,
+            )
+
+            cv2.imshow("Tello Ground Control Station", img)
+
+            # Non-blocking key capture (1ms wait)
+            key: int = cv2.waitKey(1) & 0xFF
+
+            if key == 27:  # ESC key
+                print("[COMMAND] ESC pressed. Exiting...")
+                break
+
+            # Initialize direction vectors
+            left_right: int = 0
+            forward_backward: int = 0
+            up_down: int = 0
+            yaw: int = 0
+
+            # Velocity controls
+            if key == ord("w"):
+                forward_backward = SPEED
+            elif key == ord("s"):
+                forward_backward = -SPEED
+            elif key == ord("a"):
+                left_right = -SPEED
+            elif key == ord("d"):
+                left_right = SPEED
+            elif key == ord("r"):
+                up_down = SPEED
+            elif key == ord("f"):
+                up_down = -SPEED
+            elif key == ord("e"):
+                yaw = SPEED
+            elif key == ord("q"):
+                yaw = -SPEED
+
+            # Continuous velocity command transmission
+            tello.send_rc_control(left_right, forward_backward, up_down, yaw)
+
+    finally:
+        print("[SHUTDOWN] Landing drone and releasing resources...")
+        tello.send_rc_control(0, 0, 0, 0)
+        tello.land()
+        tello.streamoff()
+        tello.end()
+        cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
