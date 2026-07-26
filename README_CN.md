@@ -113,3 +113,19 @@ https://github.com/ishverjaiswal/Drone_Swarm
 * Use the drone in a well-lit environment for reliable mission pad detection.
 * Live video streaming requires a stable Wi-Fi connection.
 * Refer to the `examples/` directory for additional usage demonstrations.
+
+## ⚙️ Installation
+
+```bash
+pip install drone_swarm_gcs
+
+
+## 🛠️ Architecture & Acknowledgments
+
+This Ground Control Station utilizes the core UDP socket communication protocols established by [DJITelloPy](https://github.com/damiafuentes/DJITelloPy). 
+
+**Key Custom Enhancements Developed in this Repository:**
+- **Custom Teleoperation Interface:** Built an interactive Pygame Ground Control Station with live telemetry HUD overlays.
+- **Multithreaded Video Pipeline:** Implemented non-blocking background video recording and frame processing using OpenCV.
+- **Enhanced Type Safety & Controls:** Integrated strict type enforcement and pre-flight battery/connection health guards.
+- **Swarm Orchestration:** Configured parallel and sequential fleet command loops over local router subnets.
