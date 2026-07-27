@@ -120,7 +120,7 @@ https://github.com/ishverjaiswal/Drone_Swarm
 pip install drone_swarm_gcs
 
 
-## 🛠️ Architecture & Acknowledgments
+## 🛠️ Architecture & Acknowledgments 
 
 This Ground Control Station utilizes the core UDP socket communication protocols established by [DJITelloPy](https://github.com/damiafuentes/DJITelloPy). 
 
