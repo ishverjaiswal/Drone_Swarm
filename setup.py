@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fd:
 
 setuptools.setup(
     name="drone_swarm_gcs",
-    version="1.0.0",
+    version="2.0.0",
     packages=setuptools.find_packages(),
     description="Python package for drone swarm coordination and control",
     long_description=long_description,
