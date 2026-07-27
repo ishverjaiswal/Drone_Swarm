@@ -1128,3 +1128,29 @@ class BackgroundFrameRead:
         Internal method, you normally wouldn't call this yourself.
         """
         self.stopped = True
+
+
+def get_telemetry_dict(self) -> dict:
+        """Returns parsed drone telemetry as a clean dictionary for WebSockets."""
+        return {
+            "drone_id": getattr(self, "address", ["192.168.10.1"])[0],
+            "battery": self.get_battery(),
+            "altitude": self.get_height(),
+            "pitch": getattr(self, "pitch", 0),
+            "roll": getattr(self, "roll", 0),
+            "yaw": getattr(self, "yaw", 0),
+            "temperature": self.get_temperature()
+        }
+        
+        
+        # Inside Tello class in drone_swarm/tello.py
+def start_video(self):
+    """Enables Tello camera video stream."""
+    self.send_control_command("streamon")
+
+def get_frame_read(self):
+    """Returns the current background frame reader object or OpenCV frame."""
+    # Ensure your Tello class exposes the video frame (e.g. via cv2 or av)
+    if hasattr(self, "frame"):
+        return self.frame
+    return None

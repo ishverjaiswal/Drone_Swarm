@@ -102,3 +102,27 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+
+# Database & Logs
+*.db
+*.sqlite3
+telemetry.db
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# React / Node
+node_modules/
+build/
+.pnp
+.pnp.js
+
+# OS Files
+.DS_Store
+Thumbs.db
